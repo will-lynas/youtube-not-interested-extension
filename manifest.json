@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Not Interested Hotkey",
+  "version": "1.0",
+  "description": "Press X while hovering over a video to mark it as Not Interested",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
