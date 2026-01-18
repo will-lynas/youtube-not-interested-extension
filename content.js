@@ -12,27 +12,28 @@ document.addEventListener('mousemove', (e) => {
 }, { passive: true });
 
 window.addEventListener('keydown', (e) => {
-  if (e.key.toLowerCase() !== 'x') return;
+  const key = e.key.toLowerCase();
+  if (key !== 'x' && key !== 'w') return;
   const tag = e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
   if (hoveredVideo) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    markNotInterested(hoveredVideo);
+    clickMenuOption(hoveredVideo, key === 'x' ? 'not interested' : 'watch later');
   }
 }, true);
 
-async function markNotInterested(videoElement) {
+async function clickMenuOption(videoElement, optionText) {
   const menuButton = findMenuButton(videoElement);
   if (!menuButton) return;
 
   menuButton.click();
 
-  await waitForElement('ytd-menu-service-item-renderer, tp-yt-paper-item, yt-list-item-view-model');
+  await waitForElement('ytd-popup-container yt-list-item-view-model');
   await new Promise(r => setTimeout(r, 200));
 
-  for (const item of document.querySelectorAll('ytd-menu-service-item-renderer, tp-yt-paper-item, yt-list-item-view-model')) {
-    if (item.textContent.toLowerCase().includes('not interested')) {
+  for (const item of document.querySelectorAll('ytd-popup-container yt-list-item-view-model')) {
+    if (item.textContent.toLowerCase().includes(optionText)) {
       item.click();
       return;
     }
